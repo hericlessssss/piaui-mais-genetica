@@ -18,7 +18,7 @@ const schema = z.object({
   cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'CPF inválido'),
   cidade: z.string().min(2, 'Cidade inválida'),
   localidade: z.string().min(3, 'Localidade inválida'),
-  telefone: z.string(), // Removida a validação regex do telefone
+  telefone: z.string(), // Removed phone validation
   email: z.string().email('Email inválido'),
   area_imovel: z.number().min(0.1, 'Área deve ser maior que 0'),
   area_pastagem: z.number().min(0.1, 'Área deve ser maior que 0'),
@@ -131,7 +131,7 @@ const Registration = () => {
       });
       
       const pdfFileName = `inscricoes/${Date.now()}-inscricao.pdf`;
-      const { error: pdfUploadError, data: pdfData } = await supabase.storage
+      const { error: pdfUploadError } = await supabase.storage
         .from('comprovantes')
         .upload(pdfFileName, pdfBlob);
 
@@ -143,7 +143,6 @@ const Registration = () => {
 
       if (!pdfUrl) throw new Error('Erro ao gerar URL do PDF');
 
-      // Atualizar o registro com a URL do PDF
       const { error: updateError } = await supabase
         .from('registrations')
         .update({ pdf_url: pdfFileName })
@@ -155,6 +154,9 @@ const Registration = () => {
         '+genetica',
         'template_adojtz5',
         {
+          to_name: 'Administrador',
+          from_name: data.nome,
+          message: `Nova inscrição recebida!\n\nNome: ${data.nome}\nCPF: ${data.cpf}\nEmail: ${data.email}\nTelefone: ${data.telefone}`,
           pdf_url: pdfUrl.publicUrl
         },
         '7oMX1lR6lscYPctqr'
@@ -182,6 +184,15 @@ const Registration = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="h-20"></div>
 
+      {/* New banner container */}
+      <div className="w-full max-w-[1920px] mx-auto overflow-hidden">
+        <img
+          src="https://i.imgur.com/EhpLspj.jpeg"
+          alt="Banner Piauí + Genética"
+          className="w-full h-auto object-contain"
+        />
+      </div>
+
       <div className="max-w-3xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Inscrição no Programa</h1>
@@ -197,14 +208,13 @@ const Registration = () => {
             </div>
             <div className="ml-3">
               <p className="text-sm text-yellow-700">
-                As inscrições estão abertas até 20/05/2025
+                As inscrições estão abertas até 31/01/2025
               </p>
             </div>
           </div>
         </div>
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-          {/* Seção: Dados Pessoais */}
           <div className="bg-white shadow-md rounded-lg p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">1. Dados Pessoais</h2>
             <div className="space-y-6">
@@ -276,7 +286,6 @@ const Registration = () => {
             </div>
           </div>
 
-          {/* Seção: Localização */}
           <div className="bg-white shadow-md rounded-lg p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">2. Localização</h2>
             <div className="space-y-6">
@@ -314,7 +323,6 @@ const Registration = () => {
             </div>
           </div>
 
-          {/* Seção: Dados da Propriedade */}
           <div className="bg-white shadow-md rounded-lg p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">3. Dados da Propriedade</h2>
             <div className="space-y-6">
@@ -354,7 +362,6 @@ const Registration = () => {
             </div>
           </div>
 
-          {/* Seção: Dados do Rebanho */}
           <div className="bg-white shadow-md rounded-lg p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">4. Dados do Rebanho</h2>
             <div className="space-y-6">
@@ -424,7 +431,6 @@ const Registration = () => {
             </div>
           </div>
 
-          {/* Seção: Documentação */}
           <div className="bg-white shadow-md rounded-lg p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">5. Documentação</h2>
             <div>
@@ -452,7 +458,6 @@ const Registration = () => {
             </div>
           </div>
 
-          {/* Botão de Envio */}
           <button
             type="submit"
             disabled={isSubmitting}

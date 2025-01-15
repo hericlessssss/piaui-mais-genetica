@@ -1,20 +1,25 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, Navigate } from 'react-router-dom';
 import { CheckCircle, Download } from 'lucide-react';
-import generatePDF from '../utils/generatePDF';
 import { supabase } from '../lib/supabase';
+import generatePDF from '../utils/generatePDF';
 
 const ThankYou = () => {
   const location = useLocation();
   const { registrationId, nome } = location.state || {};
+  const [isDownloading, setIsDownloading] = React.useState(false);
+
+  // Redirecionar se não houver ID de registro
+  if (!registrationId) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleDownloadPDF = async () => {
-    try {
-      if (!registrationId) {
-        throw new Error('ID da inscrição não encontrado');
-      }
+    if (isDownloading) return;
+    setIsDownloading(true);
 
-      const { data, error } = await supabase
+    try {
+      const { data: registration, error } = await supabase
         .from('registrations')
         .select('*')
         .eq('id', registrationId)
@@ -22,11 +27,15 @@ const ThankYou = () => {
 
       if (error) throw error;
 
-      if (data) {
-        // Baixar o PDF do storage
+      if (!registration) {
+        throw new Error('Registro não encontrado');
+      }
+
+      // Se temos o pdf_url, baixar diretamente
+      if (registration.pdf_url) {
         const { data: fileData, error: downloadError } = await supabase.storage
           .from('comprovantes')
-          .download(data.pdf_url);
+          .download(registration.pdf_url);
 
         if (downloadError) throw downloadError;
 
@@ -39,10 +48,45 @@ const ThankYou = () => {
         link.click();
         link.remove();
         window.URL.revokeObjectURL(url);
+      } else {
+        // Se não temos o pdf_url, gerar o PDF novamente
+        const { data: fileData, error: fileError } = await supabase.storage
+          .from('comprovantes')
+          .download(registration.comprovante_url);
+
+        if (fileError) throw fileError;
+
+        // Gerar o PDF com os dados do registro
+        const doc = await generatePDF(registration, registration.comprovante_url);
+        const pdfBlob = doc.output('blob');
+
+        // Criar URL do blob e forçar o download
+        const url = window.URL.createObjectURL(pdfBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `inscricao-${nome?.toLowerCase().replace(/\s+/g, '-') || 'piaui-mais-genetica'}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+
+        // Salvar o PDF gerado no storage para uso futuro
+        const pdfFileName = `inscricoes/${Date.now()}-inscricao.pdf`;
+        await supabase.storage
+          .from('comprovantes')
+          .upload(pdfFileName, pdfBlob);
+
+        // Atualizar o registro com o novo pdf_url
+        await supabase
+          .from('registrations')
+          .update({ pdf_url: pdfFileName })
+          .eq('id', registrationId);
       }
     } catch (error) {
-      console.error('Erro ao baixar PDF:', error);
-      alert('Erro ao baixar o PDF. Tente novamente.');
+      console.error('Erro ao baixar comprovante:', error);
+      alert('Não foi possível baixar o comprovante neste momento. Por favor, tente novamente mais tarde.');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -71,10 +115,15 @@ const ThankYou = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <button
               onClick={handleDownloadPDF}
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md hover:shadow-lg transform hover:scale-[1.02] duration-200"
+              disabled={isDownloading}
+              className={`w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg transition-all duration-200 shadow-md ${
+                isDownloading 
+                  ? 'opacity-75 cursor-not-allowed'
+                  : 'hover:bg-green-700 hover:shadow-lg transform hover:scale-[1.02]'
+              }`}
             >
-              <Download className="w-5 h-5 mr-2" />
-              Baixar Comprovante
+              <Download className={`w-5 h-5 mr-2 ${isDownloading ? 'animate-pulse' : ''}`} />
+              {isDownloading ? 'Baixando...' : 'Baixar Comprovante'}
             </button>
             
             <Link
