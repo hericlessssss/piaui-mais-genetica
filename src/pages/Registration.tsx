@@ -24,6 +24,7 @@ const schema = z.object({
   area_pastagem: z.number().min(0.1, 'Área deve ser maior que 0'),
   rebanho_total: z.number().int().min(1, 'Rebanho deve ser maior que 0'),
   femeas_reproducao: z.number().int().min(0, 'Valor inválido'),
+  animais_genetica: z.number().int().min(0, 'Valor inválido').default(0),
   semen_utilizado: z.string().min(3, 'Campo obrigatório'),
   comprovante: z
     .instanceof(FileList)
@@ -43,7 +44,10 @@ const Registration = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
+    defaultValues: {
+      animais_genetica: 0 // Set default value
+    }
   });
 
   const handlePhoneMask = useInputMask(maskPhone);
@@ -108,7 +112,8 @@ const Registration = () => {
       
       const registrationWithUrl = {
         ...registrationData,
-        comprovante_url: fileData.path
+        comprovante_url: fileData.path,
+        animais_genetica: data.animais_genetica || 0 // Ensure we always have a value
       };
 
       const { error: dbError, data: registration } = await supabase
