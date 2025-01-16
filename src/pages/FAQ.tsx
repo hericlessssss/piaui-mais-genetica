@@ -44,7 +44,7 @@ const FAQ = () => {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-center mb-2">Perguntas Frequentes</h1>
         <p className="text-gray-600 text-center mb-12">
-          Encontre respostas para as dúvidas mais comuns sobre o Programa Piauí + Genética
+          Encontre respostas para as dúvidas mais comuns sobre o Programa Piauí +Genética
         </p>
         
         <div className="space-y-4">
@@ -93,7 +93,7 @@ const FAQ = () => {
             >
               <Mail className="h-8 w-8 text-green-600 mb-2 group-hover:scale-110 transition-transform" />
               <span className="font-medium text-gray-900">Email</span>
-              <span className="text-sm text-gray-600">contato@piauimaisgenetica.pi.gov.br</span>
+              <span className="text-sm text-gray-600">sdrural.corrente@hotmail.com</span>
             </a>
             <a
               href="tel:+558633303000"
@@ -101,7 +101,7 @@ const FAQ = () => {
             >
               <Phone className="h-8 w-8 text-green-600 mb-2 group-hover:scale-110 transition-transform" />
               <span className="font-medium text-gray-900">Telefone</span>
-              <span className="text-sm text-gray-600">(86) 3330-3000</span>
+              <span className="text-sm text-gray-600">(86) 99982-5231</span>
             </a>
             <a
               href="https://wa.me/5586999999999"
@@ -111,7 +111,7 @@ const FAQ = () => {
             >
               <FaWhatsapp className="h-8 w-8 text-green-600 mb-2 group-hover:scale-110 transition-transform" />
               <span className="font-medium text-gray-900">WhatsApp</span>
-              <span className="text-sm text-gray-600">(86) 99999-9999</span>
+              <span className="text-sm text-gray-600">(86) 99982-5231</span>
             </a>
           </div>
         </div>

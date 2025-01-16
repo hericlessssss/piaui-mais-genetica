@@ -106,7 +106,7 @@ const ThankYou = () => {
             </h1>
             
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-              Agradecemos seu interesse no Programa Piauí + Genética. 
+              Agradecemos seu interesse no Programa Piauí +Genética. 
               Nossa equipe analisará suas informações e entrará em contato 
               em breve através do email ou telefone fornecido.
             </p>

@@ -21,7 +21,7 @@ const generatePDF = async (data: FormData & { comprovante_url: string }, fileUrl
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
-  doc.text('Piauí + Genética', pageWidth / 2, 20, { align: 'center' });
+  doc.text('Piauí +Genética', pageWidth / 2, 20, { align: 'center' });
   
   doc.setFontSize(12);
   doc.setFont('helvetica', 'normal');

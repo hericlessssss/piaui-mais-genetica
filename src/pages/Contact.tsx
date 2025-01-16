@@ -61,7 +61,7 @@ const Contact = () => {
                   <Mail className="h-6 w-6 text-green-600 group-hover:scale-110 transition-transform" />
                   <div>
                     <p className="font-medium text-gray-900">Email</p>
-                    <p className="text-sm text-gray-600">contato@piauimaisgenetica.pi.gov.br</p>
+                    <p className="text-sm text-gray-600">sdrural.corrente@hotmail.com</p>
                   </div>
                 </a>
 
@@ -72,7 +72,7 @@ const Contact = () => {
                   <Phone className="h-6 w-6 text-green-600 group-hover:scale-110 transition-transform" />
                   <div>
                     <p className="font-medium text-gray-900">Telefone</p>
-                    <p className="text-sm text-gray-600">(86) 3330-3000</p>
+                    <p className="text-sm text-gray-600">(86) 99982-5231</p>
                   </div>
                 </a>
 
@@ -85,7 +85,7 @@ const Contact = () => {
                   <FaWhatsapp className="h-6 w-6 text-green-600 group-hover:scale-110 transition-transform" />
                   <div>
                     <p className="font-medium text-gray-900">WhatsApp</p>
-                    <p className="text-sm text-gray-600">(86) 99999-9999</p>
+                    <p className="text-sm text-gray-600">(86) 99982-5231</p>
                   </div>
                 </a>
 

@@ -21,7 +21,7 @@ const Home = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
-              Piauí + Genética
+              Piauí +Genética
             </h1>
             <p className="text-xl text-white/90 mb-8 leading-relaxed animate-slide-up">
               Transformando a pecuária piauiense através da tecnologia e do melhoramento genético.
@@ -57,7 +57,7 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-16">
-            Por que escolher o Piauí + Genética?
+            Por que escolher o Piauí +Genética?
           </h2>
           
           <div className="grid md:grid-cols-3 gap-12">
@@ -131,7 +131,7 @@ const Home = () => {
           </h2>
           <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto">
             Junte-se aos produtores que já estão revolucionando a pecuária piauiense
-            com o programa Piauí + Genética.
+            com o programa Piauí +Genética.
           </p>
           <Link
             to="/inscricao"

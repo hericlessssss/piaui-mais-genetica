@@ -24,7 +24,6 @@ const schema = z.object({
   area_pastagem: z.number().min(0.1, 'Área deve ser maior que 0'),
   rebanho_total: z.number().int().min(1, 'Rebanho deve ser maior que 0'),
   femeas_reproducao: z.number().int().min(0, 'Valor inválido'),
-  animais_genetica: z.number().int().min(1, 'Deve ser maior que 0'),
   semen_utilizado: z.string().min(3, 'Campo obrigatório'),
   comprovante: z
     .instanceof(FileList)
@@ -187,8 +186,8 @@ const Registration = () => {
       {/* New banner container */}
       <div className="w-full max-w-[1920px] mx-auto overflow-hidden">
         <img
-          src="https://i.imgur.com/EhpLspj.jpeg"
-          alt="Banner Piauí + Genética"
+          src="https://i.imgur.com/D1VkdUX.png"
+          alt="Banner Piauí +Genética"
           className="w-full h-auto object-contain"
         />
       </div>
@@ -197,7 +196,7 @@ const Registration = () => {
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Inscrição no Programa</h1>
           <p className="text-lg text-gray-600">
-            Preencha o formulário abaixo para participar do Programa Piauí + Genética
+            Preencha o formulário abaixo para participar do Programa Piauí +Genética
           </p>
         </div>
 

@@ -1,6 +1,6 @@
-# Piauí + Genética 🐄
+# Piauí +Genética 🐄
 
-Website do programa Piauí + Genética, uma iniciativa do Governo do Estado do Piauí para melhoramento genético do rebanho bovino.
+Website do programa Piauí +Genética, uma iniciativa do Governo do Estado do Piauí para melhoramento genético do rebanho bovino.
 
 ## 🌟 Funcionalidades
 
