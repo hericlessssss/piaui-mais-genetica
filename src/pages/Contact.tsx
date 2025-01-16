@@ -77,7 +77,7 @@ const Contact = () => {
                 </a>
 
                 <a
-                  href="https://wa.me/5586999999999"
+                  href="https://wa.me/5586999825231"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 hover:bg-green-50 transition-colors group"

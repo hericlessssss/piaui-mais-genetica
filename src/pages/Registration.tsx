@@ -10,7 +10,7 @@ import generatePDF from '../utils/generatePDF';
 import { maskPhone, maskCPF, useInputMask } from '../utils/masks';
 import type { FormData } from '../types';
 
-const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
 
 const schema = z.object({
@@ -31,7 +31,7 @@ const schema = z.object({
     .transform(files => files[0])
     .refine(
       (file) => file?.size <= MAX_FILE_SIZE,
-      'Arquivo deve ter no máximo 1MB'
+      'Arquivo deve ter no máximo 10MB'
     )
     .refine(
       (file) => ACCEPTED_FILE_TYPES.includes(file?.type),
@@ -449,7 +449,7 @@ const Registration = () => {
                   cursor-pointer"
               />
               <p className="mt-2 text-sm text-gray-500">
-                Aceitamos arquivos PDF, JPG ou PNG até 1 MB
+                Aceitamos arquivos PDF, JPG ou PNG até 10 MB
               </p>
               {errors.comprovante && (
                 <p className="mt-1 text-sm text-red-600">{errors.comprovante.message}</p>

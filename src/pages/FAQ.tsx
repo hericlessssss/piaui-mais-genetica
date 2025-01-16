@@ -88,7 +88,7 @@ const FAQ = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <a
-              href="mailto:contato@piauimaisgenetica.pi.gov.br"
+              href="mailto:sdrural.corrente@hotmail.com"
               className="flex flex-col items-center p-4 rounded-lg bg-gray-50 hover:bg-green-50 transition-colors group"
             >
               <Mail className="h-8 w-8 text-green-600 mb-2 group-hover:scale-110 transition-transform" />
@@ -104,7 +104,7 @@ const FAQ = () => {
               <span className="text-sm text-gray-600">(86) 99982-5231</span>
             </a>
             <a
-              href="https://wa.me/5586999999999"
+              href="https://wa.me/5586999825231"
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center p-4 rounded-lg bg-gray-50 hover:bg-green-50 transition-colors group"
