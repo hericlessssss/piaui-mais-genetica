@@ -10,15 +10,12 @@ import generatePDF from '../utils/generatePDF';
 import { maskPhone, maskCPF, useInputMask } from '../utils/masks';
 import type { FormData } from '../types';
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-const ACCEPTED_FILE_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
-
 const schema = z.object({
   nome: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
   cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'CPF inválido'),
   cidade: z.string().min(2, 'Cidade inválida'),
   localidade: z.string().min(3, 'Localidade inválida'),
-  telefone: z.string(), // Removed phone validation
+  telefone: z.string(),
   email: z.string().email('Email inválido'),
   area_imovel: z.number().min(0.1, 'Área deve ser maior que 0'),
   area_pastagem: z.number().min(0.1, 'Área deve ser maior que 0'),
@@ -26,18 +23,6 @@ const schema = z.object({
   femeas_reproducao: z.number().int().min(0, 'Valor inválido'),
   animais_genetica: z.number().int().min(0, 'Valor inválido').default(0),
   semen_utilizado: z.string().min(3, 'Campo obrigatório'),
-  comprovante: z
-    .instanceof(FileList)
-    .refine((files) => files?.length === 1, 'Arquivo é obrigatório')
-    .transform(files => files[0])
-    .refine(
-      (file) => file?.size <= MAX_FILE_SIZE,
-      'Arquivo deve ter no máximo 10MB'
-    )
-    .refine(
-      (file) => ACCEPTED_FILE_TYPES.includes(file?.type),
-      'Formato de arquivo inválido. Use PDF, JPG ou PNG'
-    ),
 });
 
 const Registration = () => {
@@ -46,94 +31,31 @@ const Registration = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      animais_genetica: 0 // Set default value
+      animais_genetica: 0
     }
   });
 
   const handlePhoneMask = useInputMask(maskPhone);
   const handleCPFMask = useInputMask(maskCPF);
 
-  const compressImage = async (file: File): Promise<Blob> => {
-    if (!file.type.startsWith('image/')) return file;
-
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d')!;
-
-          let width = img.width;
-          let height = img.height;
-          const maxSize = 800;
-
-          if (width > height && width > maxSize) {
-            height = (height * maxSize) / width;
-            width = maxSize;
-          } else if (height > maxSize) {
-            width = (width * maxSize) / height;
-            height = maxSize;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          ctx.drawImage(img, 0, 0, width, height);
-
-          canvas.toBlob(
-            (blob) => resolve(blob!),
-            'image/jpeg',
-            0.7
-          );
-        };
-        img.src = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
   const onSubmit = async (data: FormData) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
-      const compressedFile = await compressImage(data.comprovante);
-      
-      const fileExt = data.comprovante.name.split('.').pop();
-      const fileName = `comprovantes/${Date.now()}.${fileExt}`;
-      
-      const { error: uploadError, data: fileData } = await supabase.storage
-        .from('comprovantes')
-        .upload(fileName, compressedFile);
-
-      if (uploadError) throw new Error('Erro ao fazer upload do arquivo');
-
-      const { comprovante, ...registrationData } = data;
-      
-      const registrationWithUrl = {
-        ...registrationData,
-        comprovante_url: fileData.path,
-        animais_genetica: data.animais_genetica || 0 // Ensure we always have a value
-      };
-
       const { error: dbError, data: registration } = await supabase
         .from('registrations')
-        .insert([registrationWithUrl])
+        .insert([data])
         .select()
         .single();
 
       if (dbError) throw new Error('Erro ao salvar registro no banco de dados');
 
-      const doc = await generatePDF(registrationWithUrl, fileData.path);
-      const pdfBlob = doc.output('blob', {
-        compress: true,
-        compressPdf: true,
-        userPassword: undefined,
-        ownerPassword: undefined,
-        putOnlyUsedFonts: true,
-        precision: 2
-      });
+      // Gerar PDF
+      const doc = await generatePDF(data);
+      const pdfBlob = doc.output('blob');
       
+      // Salvar PDF no storage
       const pdfFileName = `inscricoes/${Date.now()}-inscricao.pdf`;
       const { error: pdfUploadError } = await supabase.storage
         .from('comprovantes')
@@ -141,12 +63,14 @@ const Registration = () => {
 
       if (pdfUploadError) throw new Error('Erro ao fazer upload do PDF');
 
+      // Obter URL pública do PDF
       const { data: pdfUrl } = supabase.storage
         .from('comprovantes')
         .getPublicUrl(pdfFileName);
 
       if (!pdfUrl) throw new Error('Erro ao gerar URL do PDF');
 
+      // Atualizar registro com URL do PDF
       const { error: updateError } = await supabase
         .from('registrations')
         .update({ pdf_url: pdfFileName })
@@ -154,6 +78,7 @@ const Registration = () => {
 
       if (updateError) throw new Error('Erro ao atualizar registro com URL do PDF');
 
+      // Enviar email
       const emailResult = await emailjs.send(
         '+genetica',
         'template_adojtz5',
@@ -432,33 +357,6 @@ const Registration = () => {
                   <p className="mt-1 text-sm text-red-600">{errors.semen_utilizado.message}</p>
                 )}
               </div>
-            </div>
-          </div>
-
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">5. Documentação</h2>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Comprovante de Inscrição ADAPI
-              </label>
-              <input
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
-                {...register('comprovante')}
-                className="w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-md file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-green-50 file:text-green-700
-                  hover:file:bg-green-100
-                  cursor-pointer"
-              />
-              <p className="mt-2 text-sm text-gray-500">
-                Aceitamos arquivos PDF, JPG ou PNG até 10 MB
-              </p>
-              {errors.comprovante && (
-                <p className="mt-1 text-sm text-red-600">{errors.comprovante.message}</p>
-              )}
             </div>
           </div>
 

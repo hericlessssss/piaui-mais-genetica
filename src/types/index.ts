@@ -11,5 +11,4 @@ export interface FormData {
   femeas_reproducao: number;
   animais_genetica: number;
   semen_utilizado: string;
-  comprovante: File;
 }

@@ -96,22 +96,22 @@ const FAQ = () => {
               <span className="text-sm text-gray-600">sdrural.corrente@hotmail.com</span>
             </a>
             <a
-              href="tel:+558933303000"
+              href="tel:+558633303000"
               className="flex flex-col items-center p-4 rounded-lg bg-gray-50 hover:bg-green-50 transition-colors group"
             >
               <Phone className="h-8 w-8 text-green-600 mb-2 group-hover:scale-110 transition-transform" />
               <span className="font-medium text-gray-900">Telefone</span>
-              <span className="text-sm text-gray-600">(89) 99982-5231</span>
+              <span className="text-sm text-gray-600">(86) 99982-5231</span>
             </a>
             <a
-              href="https://wa.me/5589999825231"
+              href="https://wa.me/5586999825231"
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center p-4 rounded-lg bg-gray-50 hover:bg-green-50 transition-colors group"
             >
               <FaWhatsapp className="h-8 w-8 text-green-600 mb-2 group-hover:scale-110 transition-transform" />
               <span className="font-medium text-gray-900">WhatsApp</span>
-              <span className="text-sm text-gray-600">(89) 99982-5231</span>
+              <span className="text-sm text-gray-600">(86) 99982-5231</span>
             </a>
           </div>
         </div>

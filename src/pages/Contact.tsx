@@ -66,18 +66,18 @@ const Contact = () => {
                 </a>
 
                 <a
-                  href="tel:+558933303000"
+                  href="tel:+558633303000"
                   className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 hover:bg-green-50 transition-colors group"
                 >
                   <Phone className="h-6 w-6 text-green-600 group-hover:scale-110 transition-transform" />
                   <div>
                     <p className="font-medium text-gray-900">Telefone</p>
-                    <p className="text-sm text-gray-600">(89) 99982-5231</p>
+                    <p className="text-sm text-gray-600">(86) 99982-5231</p>
                   </div>
                 </a>
 
                 <a
-                  href="https://wa.me/5589999825231"
+                  href="https://wa.me/5586999825231"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 hover:bg-green-50 transition-colors group"
@@ -85,7 +85,7 @@ const Contact = () => {
                   <FaWhatsapp className="h-6 w-6 text-green-600 group-hover:scale-110 transition-transform" />
                   <div>
                     <p className="font-medium text-gray-900">WhatsApp</p>
-                    <p className="text-sm text-gray-600">(89) 99982-5231</p>
+                    <p className="text-sm text-gray-600">(86) 99982-5231</p>
                   </div>
                 </a>
 

@@ -50,14 +50,7 @@ const ThankYou = () => {
         window.URL.revokeObjectURL(url);
       } else {
         // Se não temos o pdf_url, gerar o PDF novamente
-        const { data: fileData, error: fileError } = await supabase.storage
-          .from('comprovantes')
-          .download(registration.comprovante_url);
-
-        if (fileError) throw fileError;
-
-        // Gerar o PDF com os dados do registro
-        const doc = await generatePDF(registration, registration.comprovante_url);
+        const doc = await generatePDF(registration);
         const pdfBlob = doc.output('blob');
 
         // Criar URL do blob e forçar o download
